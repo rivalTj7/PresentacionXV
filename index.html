@@ -40,6 +40,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#06080f;font-family:
 .nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:100;background:rgba(5,8,18,0.92);border:1px solid rgba(61,108,181,0.3);padding:10px 22px;backdrop-filter:blur(10px);}
 .nb{background:transparent;border:1px solid rgba(61,108,181,0.5);color:#5a8fd4;width:34px;height:34px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.3s;font-family:inherit;}
 .nb:hover{background:rgba(61,108,181,0.18);border-color:#5a8fd4;}
+.fsb{background:transparent;border:1px solid rgba(61,108,181,0.4);color:#5a8fd4;width:34px;height:34px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.3s;position:fixed;top:18px;right:26px;z-index:200;backdrop-filter:blur(8px);background:rgba(5,8,18,0.7);}
+.fsb:hover{background:rgba(61,108,181,0.2);border-color:#5a8fd4;}
 .nd{display:flex;gap:7px;align-items:center;}
 .dot{width:5px;height:5px;border-radius:50%;background:rgba(201,162,39,0.3);cursor:pointer;border:none;padding:0;transition:all 0.3s;}
 .dot.active{background:#3d6cb5;width:16px;border-radius:3px;}
@@ -236,6 +238,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#06080f;font-family:
   <div class="nd" id="dots"></div>
   <button class="nb" onclick="navigate(1)">›</button>
 </div>
+<button class="fsb" id="fsb" onclick="toggleFS()" title="Pantalla completa">⛶</button>
 <div class="cnt" id="cnt">01 / 09</div>
 <div class="stl" id="stl"></div>
 
@@ -279,6 +282,25 @@ for(let i=0;i<90;i++)P.push({x:Math.random()*window.innerWidth,y:Math.random()*w
   requestAnimationFrame(loop);
 })();
 stlEl.textContent=TITLES[0];
+
+function toggleFS(){
+  const el=document.documentElement;
+  const btn=document.getElementById('fsb');
+  if(!document.fullscreenElement&&!document.webkitFullscreenElement){
+    (el.requestFullscreen||el.webkitRequestFullscreen).call(el);
+  } else {
+    (document.exitFullscreen||document.webkitExitFullscreen).call(document);
+  }
+}
+document.addEventListener('fullscreenchange',updateFSBtn);
+document.addEventListener('webkitfullscreenchange',updateFSBtn);
+function updateFSBtn(){
+  const btn=document.getElementById('fsb');
+  const isFS=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  btn.textContent=isFS?'✕':'⛶';
+  btn.title=isFS?'Salir de pantalla completa':'Pantalla completa';
+}
+document.addEventListener('keydown',e=>{if(e.key==='f'||e.key==='F')toggleFS();});
 </script>
 </body>
 </html>
